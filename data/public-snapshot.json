@@ -1,0 +1,138 @@
+{
+  "version" : "1",
+  "generatedAt" : "2026-05-30T09:29:54.982341900Z",
+  "period" : {
+    "label" : "This month",
+    "from" : "01/05/2026",
+    "to" : "30/05/2026"
+  },
+  "shop" : {
+    "name" : "New store"
+  },
+  "summary" : {
+    "earnings" : 9116.68,
+    "expenses" : 16894.0,
+    "purchases" : 16894.0,
+    "returns" : 0.0,
+    "losses" : 0.0,
+    "miscIncome" : 0.0,
+    "miscExpense" : 0.0,
+    "pendingPayments" : 0.0,
+    "netMovement" : -7777.32,
+    "movementLabel" : "Net loss",
+    "salesCount" : 21,
+    "purchaseCount" : 20,
+    "returnCount" : 0,
+    "lossCount" : 0
+  },
+  "topProducts" : [ {
+    "productName" : "Buffalo Milk",
+    "revenue" : 1866.0,
+    "quantity" : 27.0,
+    "quantityLabel" : "27"
+  }, {
+    "productName" : "Masala Wafer,Farali Chevdo,CrunchX",
+    "revenue" : 1430.0,
+    "quantity" : 101010.0,
+    "quantityLabel" : "101010"
+  }, {
+    "productName" : "Buffalo Milk,Milk Gold",
+    "revenue" : 1360.0,
+    "quantity" : 1020.0,
+    "quantityLabel" : "1020"
+  }, {
+    "productName" : "Masala Wafer",
+    "revenue" : 1320.0,
+    "quantity" : 20.0,
+    "quantityLabel" : "20"
+  }, {
+    "productName" : "CrunchX",
+    "revenue" : 1020.0,
+    "quantity" : 17.0,
+    "quantityLabel" : "17"
+  }, {
+    "productName" : "ETW",
+    "revenue" : 690.0,
+    "quantity" : 32.0,
+    "quantityLabel" : "32"
+  }, {
+    "productName" : "Bhujiya",
+    "revenue" : 410.0,
+    "quantity" : 20.0,
+    "quantityLabel" : "20"
+  }, {
+    "productName" : "Buffalo Milk,Buffalo Milk,Milk Gold,Milk Gold,Milk Shakti,CrunchX,Masala Wafer,Farali Chevdo",
+    "revenue" : 344.0,
+    "quantity" : 1.1111111E7,
+    "quantityLabel" : "11111111"
+  } ],
+  "stockAvailability" : [ {
+    "productName" : "Body lotion",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Body lotion",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Buffalo Milk",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Buffalo Milk",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "CrunchX",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Face wash",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Farali Chevdo",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Masala Wafer",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Milk Gold",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Milk Gold",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Milk Shakti",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Night cream",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Rice loose",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Rice loose",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Tikhi Sing",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Wheat Loose",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  }, {
+    "productName" : "Wheat Loose",
+    "status" : "IN_STOCK",
+    "quantityBand" : "Available"
+  } ]
+}

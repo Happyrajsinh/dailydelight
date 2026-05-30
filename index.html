@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>New store - public snapshot</title>
+  <link rel="stylesheet" href="assets/share.css" />
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Public store snapshot</p>
+        <h1 data-field="shop-name">New store</h1>
+        <p class="muted" data-field="period"></p>
+      </div>
+      <div class="generated-card">
+        <span>Updated</span>
+        <strong data-field="generated-at"></strong>
+      </div>
+    </section>
+
+    <section class="summary-grid">
+      <article class="metric"><span>Earnings</span><strong data-field="earnings"></strong></article>
+      <article class="metric"><span>Expenses</span><strong data-field="expenses"></strong></article>
+      <article class="metric"><span data-field="movement-label"></span><strong data-field="net-movement"></strong></article>
+      <article class="metric"><span>Pending payments</span><strong data-field="pending-payments"></strong></article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel">
+        <div class="panel-heading">
+          <h2>Top selling products</h2>
+          <span data-field="top-count"></span>
+        </div>
+        <div id="top-products" class="rank-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-heading">
+          <h2>Stock availability</h2>
+          <span data-field="stock-count"></span>
+        </div>
+        <div id="stock-list" class="stock-list"></div>
+      </article>
+    </section>
+  </main>
+  <script>
+    const money = (value) => new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 2
+    }).format(Math.abs(Number(value || 0)));
+    const dateTime = (value) => value ? new Date(value).toLocaleString() : "-";
+    const write = (selector, value) => {
+      const node = document.querySelector(`[data-field="${selector}"]`);
+      if (node) node.textContent = value;
+    };
+    const safe = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[char]);
+    fetch("data/public-snapshot.json", { cache: "no-store" })
+      .then((response) => response.json())
+      .then((data) => {
+        write("shop-name", data.shop?.name || "Store");
+        write("period", `${data.period?.label || "Selected period"}: ${data.period?.from || "-"} to ${data.period?.to || "-"}`);
+        write("generated-at", dateTime(data.generatedAt));
+        write("earnings", money(data.summary?.earnings));
+        write("expenses", money(data.summary?.expenses));
+        write("movement-label", data.summary?.movementLabel || "Net movement");
+        write("net-movement", money(data.summary?.netMovement));
+        write("pending-payments", money(data.summary?.pendingPayments));
+        write("top-count", `${data.topProducts?.length || 0} shown`);
+        write("stock-count", `${data.stockAvailability?.length || 0} products`);
+        const topList = document.getElementById("top-products");
+        topList.innerHTML = (data.topProducts || []).map((item, index) => `
+          <div class="rank-row">
+            <div><strong>${index + 1}. ${safe(item.productName)}</strong><span>${money(item.revenue)} revenue | ${safe(item.quantityLabel)} sold</span></div>
+            <b>${money(item.revenue)}</b>
+          </div>
+        `).join("") || "<p class='empty'>No sales found for this period.</p>";
+        const stockList = document.getElementById("stock-list");
+        stockList.innerHTML = (data.stockAvailability || []).map((item) => `
+          <div class="stock-row ${item.status === "LOW_STOCK" ? "low" : ""}">
+            <strong>${safe(item.productName)}</strong><span>${safe(item.quantityBand)}</span>
+          </div>
+        `).join("") || "<p class='empty'>No stock data available.</p>";
+      });
+  </script>
+</body>
+</html>
