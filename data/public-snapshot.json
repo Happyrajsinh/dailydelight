@@ -1,6 +1,6 @@
 {
   "version" : "1",
-  "generatedAt" : "2026-05-30T09:29:54.982341900Z",
+  "generatedAt" : "2026-05-30T09:33:44.526635100Z",
   "period" : {
     "label" : "This month",
     "from" : "01/05/2026",
@@ -10,18 +10,18 @@
     "name" : "New store"
   },
   "summary" : {
-    "earnings" : 9116.68,
-    "expenses" : 16894.0,
-    "purchases" : 16894.0,
+    "earnings" : 9216.68,
+    "expenses" : 16944.0,
+    "purchases" : 16944.0,
     "returns" : 0.0,
     "losses" : 0.0,
     "miscIncome" : 0.0,
     "miscExpense" : 0.0,
     "pendingPayments" : 0.0,
-    "netMovement" : -7777.32,
+    "netMovement" : -7727.32,
     "movementLabel" : "Net loss",
-    "salesCount" : 21,
-    "purchaseCount" : 20,
+    "salesCount" : 22,
+    "purchaseCount" : 21,
     "returnCount" : 0,
     "lossCount" : 0
   },
