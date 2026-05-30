@@ -1,35 +1,40 @@
 {
   "version" : "1",
-  "generatedAt" : "2026-05-30T09:33:44.526635100Z",
+  "generatedAt" : "2026-05-30T09:39:44.343532600Z",
   "period" : {
-    "label" : "This month",
-    "from" : "01/05/2026",
+    "label" : "This year",
+    "from" : "01/01/2026",
     "to" : "30/05/2026"
   },
   "shop" : {
     "name" : "New store"
   },
   "summary" : {
-    "earnings" : 9216.68,
-    "expenses" : 16944.0,
-    "purchases" : 16944.0,
-    "returns" : 0.0,
-    "losses" : 0.0,
+    "earnings" : 12788.06,
+    "expenses" : 27972.39,
+    "purchases" : 27821.39,
+    "returns" : 31.0,
+    "losses" : 20.0,
     "miscIncome" : 0.0,
-    "miscExpense" : 0.0,
-    "pendingPayments" : 0.0,
-    "netMovement" : -7727.32,
+    "miscExpense" : 100.0,
+    "pendingPayments" : 239.32,
+    "netMovement" : -15184.33,
     "movementLabel" : "Net loss",
-    "salesCount" : 22,
-    "purchaseCount" : 21,
-    "returnCount" : 0,
-    "lossCount" : 0
+    "salesCount" : 37,
+    "purchaseCount" : 27,
+    "returnCount" : 1,
+    "lossCount" : 1
   },
   "topProducts" : [ {
+    "productName" : "CrunchX",
+    "revenue" : 2220.0,
+    "quantity" : 37.0,
+    "quantityLabel" : "37"
+  }, {
     "productName" : "Buffalo Milk",
-    "revenue" : 1866.0,
-    "quantity" : 27.0,
-    "quantityLabel" : "27"
+    "revenue" : 2080.0,
+    "quantity" : 32.0,
+    "quantityLabel" : "32"
   }, {
     "productName" : "Masala Wafer,Farali Chevdo,CrunchX",
     "revenue" : 1430.0,
@@ -46,25 +51,20 @@
     "quantity" : 20.0,
     "quantityLabel" : "20"
   }, {
-    "productName" : "CrunchX",
-    "revenue" : 1020.0,
-    "quantity" : 17.0,
-    "quantityLabel" : "17"
+    "productName" : "Wheat Loose",
+    "revenue" : 1027.32,
+    "quantity" : 17.122,
+    "quantityLabel" : "17.122"
   }, {
     "productName" : "ETW",
     "revenue" : 690.0,
     "quantity" : 32.0,
     "quantityLabel" : "32"
   }, {
-    "productName" : "Bhujiya",
-    "revenue" : 410.0,
-    "quantity" : 20.0,
-    "quantityLabel" : "20"
-  }, {
-    "productName" : "Buffalo Milk,Buffalo Milk,Milk Gold,Milk Gold,Milk Shakti,CrunchX,Masala Wafer,Farali Chevdo",
-    "revenue" : 344.0,
-    "quantity" : 1.1111111E7,
-    "quantityLabel" : "11111111"
+    "productName" : "Rice loose",
+    "revenue" : 554.36,
+    "quantity" : 8.906,
+    "quantityLabel" : "8.906"
   } ],
   "stockAvailability" : [ {
     "productName" : "Body lotion",
