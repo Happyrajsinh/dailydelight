@@ -4,19 +4,47 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex" />
-  <title>New store - public snapshot</title>
+  <title>rupeeio public snapshot</title>
   <link rel="stylesheet" href="assets/share.css" />
 </head>
 <body>
   <main class="page-shell">
+    <section id="access-gate" class="access-grid">
+      <article class="gate-copy">
+        <p class="eyebrow">Public store snapshot</p>
+        <h1>Protected retail snapshot</h1>
+        <p class="muted">
+          This page is published as a static GitHub Pages report. Enter the access code shared by the store owner to view the latest public numbers.
+        </p>
+        <div class="privacy-strip">
+          <span>Encrypted data file</span>
+          <span>No customer details</span>
+          <span>No bills or internal notes</span>
+        </div>
+      </article>
+
+      <form id="access-form" class="access-card">
+        <span class="lock-mark">rupeeio</span>
+        <h2>Enter access code</h2>
+        <p class="muted">The report unlocks only in this browser. The code is not sent anywhere.</p>
+        <label for="access-code">Visitor access code</label>
+        <div class="access-row">
+          <input id="access-code" name="access-code" type="password" autocomplete="current-password" placeholder="Access code" required />
+          <button id="unlock-button" type="submit">View report</button>
+        </div>
+        <p id="access-error" class="error-text" role="alert"></p>
+      </form>
+    </section>
+
+    <section id="report-shell" hidden>
     <section class="hero">
       <div>
         <p class="eyebrow">Public store snapshot</p>
-        <h1 data-field="shop-name">New store</h1>
+        <h1 data-field="shop-name">Store</h1>
         <p class="muted" data-field="period"></p>
       </div>
       <div class="generated-card">
-        <span>Updated</span>
+        <span>Last updated</span>
         <strong data-field="generated-at"></strong>
       </div>
     </section>
@@ -24,8 +52,26 @@
     <section class="summary-grid">
       <article class="metric"><span>Earnings</span><strong data-field="earnings"></strong></article>
       <article class="metric"><span>Expenses</span><strong data-field="expenses"></strong></article>
-      <article class="metric"><span data-field="movement-label"></span><strong data-field="net-movement"></strong></article>
+      <article class="metric"><span data-field="movement-label"></span><strong data-field="net-movement" class="movement-value"></strong></article>
       <article class="metric"><span>Pending payments</span><strong data-field="pending-payments"></strong></article>
+    </section>
+
+    <section class="detail-grid">
+      <article class="detail-card">
+        <span>Sales bills</span>
+        <strong data-field="sales-count"></strong>
+        <small data-field="sold-quantity"></small>
+      </article>
+      <article class="detail-card">
+        <span>Purchase entries</span>
+        <strong data-field="purchase-count"></strong>
+        <small data-field="purchased-quantity"></small>
+      </article>
+      <article class="detail-card">
+        <span>Stock products</span>
+        <strong data-field="stock-products"></strong>
+        <small data-field="low-stock-products"></small>
+      </article>
     </section>
 
     <section class="content-grid">
@@ -45,12 +91,23 @@
         <div id="stock-list" class="stock-list"></div>
       </article>
     </section>
+
+    <section class="share-note">
+      <strong>Public-safe report</strong>
+      <span>Only summary totals, product rankings, and stock status are shared. Customer names, invoices, transaction IDs, and internal notes stay inside rupeeio.</span>
+    </section>
+    </section>
   </main>
   <script>
+    const textEncoder = new TextEncoder();
+    const textDecoder = new TextDecoder();
     const money = (value) => new Intl.NumberFormat("en-IN", {
       style: "currency",
       currency: "INR",
       maximumFractionDigits: 2
+    }).format(Math.abs(Number(value || 0)));
+    const number = (value) => new Intl.NumberFormat("en-IN", {
+      maximumFractionDigits: 3
     }).format(Math.abs(Number(value || 0)));
     const dateTime = (value) => value ? new Date(value).toLocaleString() : "-";
     const write = (selector, value) => {
@@ -64,33 +121,110 @@
       '"': "&quot;",
       "'": "&#39;"
     })[char]);
-    fetch("data/public-snapshot.json", { cache: "no-store" })
-      .then((response) => response.json())
-      .then((data) => {
-        write("shop-name", data.shop?.name || "Store");
-        write("period", `${data.period?.label || "Selected period"}: ${data.period?.from || "-"} to ${data.period?.to || "-"}`);
-        write("generated-at", dateTime(data.generatedAt));
-        write("earnings", money(data.summary?.earnings));
-        write("expenses", money(data.summary?.expenses));
-        write("movement-label", data.summary?.movementLabel || "Net movement");
-        write("net-movement", money(data.summary?.netMovement));
-        write("pending-payments", money(data.summary?.pendingPayments));
-        write("top-count", `${data.topProducts?.length || 0} shown`);
-        write("stock-count", `${data.stockAvailability?.length || 0} products`);
-        const topList = document.getElementById("top-products");
-        topList.innerHTML = (data.topProducts || []).map((item, index) => `
-          <div class="rank-row">
-            <div><strong>${index + 1}. ${safe(item.productName)}</strong><span>${money(item.revenue)} revenue | ${safe(item.quantityLabel)} sold</span></div>
-            <b>${money(item.revenue)}</b>
-          </div>
-        `).join("") || "<p class='empty'>No sales found for this period.</p>";
-        const stockList = document.getElementById("stock-list");
-        stockList.innerHTML = (data.stockAvailability || []).map((item) => `
-          <div class="stock-row ${item.status === "LOW_STOCK" ? "low" : ""}">
-            <strong>${safe(item.productName)}</strong><span>${safe(item.quantityBand)}</span>
-          </div>
-        `).join("") || "<p class='empty'>No stock data available.</p>";
+    const fromBase64 = (value) => Uint8Array.from(atob(value || ""), (char) => char.charCodeAt(0));
+    const encryptedPayload = fetch("data/public-snapshot.json", { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) throw new Error("The public data file is not available yet.");
+        return response.json();
       });
+    const decryptSnapshot = async (payload, code) => {
+      if (!window.crypto?.subtle) {
+        throw new Error("This browser cannot unlock encrypted public data.");
+      }
+      const keyMaterial = await crypto.subtle.importKey(
+        "raw",
+        textEncoder.encode(code),
+        "PBKDF2",
+        false,
+        ["deriveKey"]
+      );
+      const key = await crypto.subtle.deriveKey(
+        {
+          name: "PBKDF2",
+          salt: fromBase64(payload.salt),
+          iterations: Number(payload.iterations || 180000),
+          hash: payload.hash || "SHA-256"
+        },
+        keyMaterial,
+        { name: "AES-GCM", length: 256 },
+        false,
+        ["decrypt"]
+      );
+      const plain = await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: fromBase64(payload.iv) },
+        key,
+        fromBase64(payload.cipherText)
+      );
+      return JSON.parse(textDecoder.decode(plain));
+    };
+    const renderSnapshot = (data) => {
+      const summary = data.summary || {};
+      const netMovement = Number(summary.netMovement || 0);
+      const movementNode = document.querySelector('[data-field="net-movement"]');
+      write("shop-name", data.shop?.name || "Store");
+      write("period", `${data.period?.label || "Selected period"}: ${data.period?.from || "-"} to ${data.period?.to || "-"}`);
+      write("generated-at", dateTime(data.generatedAt));
+      write("earnings", money(summary.earnings));
+      write("expenses", money(summary.expenses));
+      write("movement-label", summary.movementLabel || (netMovement >= 0 ? "Net gain" : "Net loss"));
+      write("net-movement", money(netMovement));
+      write("pending-payments", money(summary.pendingPayments));
+      write("sales-count", number(summary.salesCount));
+      write("sold-quantity", `${number(summary.soldQuantity)} quantity sold`);
+      write("purchase-count", number(summary.purchaseCount));
+      write("purchased-quantity", `${number(summary.purchasedQuantity)} quantity purchased`);
+      write("stock-products", number(summary.stockProducts));
+      write("low-stock-products", `${number(summary.lowStockProducts)} low stock`);
+      write("top-count", `${data.topProducts?.length || 0} shown`);
+      write("stock-count", `${data.stockAvailability?.length || 0} products`);
+      if (movementNode) {
+        movementNode.classList.toggle("positive", netMovement >= 0);
+        movementNode.classList.toggle("negative", netMovement < 0);
+      }
+      const topList = document.getElementById("top-products");
+      topList.innerHTML = (data.topProducts || []).map((item, index) => {
+        const share = Math.min(100, Math.max(Number(item.revenueShare || 0), Number(item.revenue || 0) > 0 ? 4 : 0));
+        return `
+          <div class="rank-row">
+            <div class="rank-main">
+              <div class="rank-title"><strong>${index + 1}. ${safe(item.productName)}</strong><b>${money(item.revenue)}</b></div>
+              <span>${money(item.revenue)} revenue | ${safe(item.quantityLabel)} sold | ${Number(item.revenueShare || 0).toFixed(1)}% of earnings</span>
+              <div class="bar-track"><i style="width:${share}%"></i></div>
+            </div>
+          </div>
+        `;
+      }).join("") || "<p class='empty'>No sales found for this period.</p>";
+      const stockList = document.getElementById("stock-list");
+      stockList.innerHTML = (data.stockAvailability || []).map((item) => `
+        <div class="stock-row ${item.status === "LOW_STOCK" ? "low" : ""}">
+          <div><strong>${safe(item.productName)}</strong><span>${safe(item.quantityLabel || "")}</span></div>
+          <em>${safe(item.quantityBand)}</em>
+        </div>
+      `).join("") || "<p class='empty'>No stock data available.</p>";
+    };
+    document.getElementById("access-form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const error = document.getElementById("access-error");
+      const button = document.getElementById("unlock-button");
+      const code = document.getElementById("access-code").value.trim();
+      error.textContent = "";
+      button.disabled = true;
+      button.textContent = "Unlocking";
+      try {
+        const payload = await encryptedPayload;
+        const data = await decryptSnapshot(payload, code);
+        renderSnapshot(data);
+        document.getElementById("access-gate").hidden = true;
+        document.getElementById("report-shell").hidden = false;
+      } catch (errorValue) {
+        error.textContent = errorValue?.message?.includes("public data file")
+          ? errorValue.message
+          : "Access code could not unlock this report.";
+      } finally {
+        button.disabled = false;
+        button.textContent = "View report";
+      }
+    });
   </script>
 </body>
 </html>
