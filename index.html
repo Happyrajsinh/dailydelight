@@ -83,18 +83,28 @@
         <div id="top-products" class="rank-list"></div>
       </article>
 
-      <article class="panel">
-        <div class="panel-heading">
-          <h2>Stock availability</h2>
-          <span data-field="stock-count"></span>
-        </div>
-        <div id="stock-list" class="stock-list"></div>
-      </article>
+      <div class="side-stack">
+        <article class="panel">
+          <div class="panel-heading">
+            <h2>Stock availability</h2>
+            <span data-field="stock-count"></span>
+          </div>
+          <div id="stock-list" class="stock-list"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <h2>Latest activity</h2>
+            <span data-field="activity-count"></span>
+          </div>
+          <div id="recent-transactions" class="activity-list"></div>
+        </article>
+      </div>
     </section>
 
     <section class="share-note">
       <strong>Public-safe report</strong>
-      <span>Only summary totals, product rankings, and stock status are shared. Customer names, invoices, transaction IDs, and internal notes stay inside rupeeio.</span>
+      <span>Only summary totals, product rankings, stock status, and recent activity are shared. Customer names, invoices, transaction IDs, and internal notes stay inside rupeeio.</span>
     </section>
     </section>
   </main>
@@ -177,6 +187,7 @@
       write("low-stock-products", `${number(summary.lowStockProducts)} low stock`);
       write("top-count", `${data.topProducts?.length || 0} shown`);
       write("stock-count", `${data.stockAvailability?.length || 0} products`);
+      write("activity-count", `${data.recentTransactions?.length || 0} latest`);
       if (movementNode) {
         movementNode.classList.toggle("positive", netMovement >= 0);
         movementNode.classList.toggle("negative", netMovement < 0);
@@ -201,6 +212,18 @@
           <em>${safe(item.quantityBand)}</em>
         </div>
       `).join("") || "<p class='empty'>No stock data available.</p>";
+      const activityList = document.getElementById("recent-transactions");
+      activityList.innerHTML = (data.recentTransactions || []).map((item) => `
+        <div class="activity-row ${item.direction === "credit" ? "credit" : "debit"}">
+          <div class="activity-icon">${item.direction === "credit" ? "+" : "-"}</div>
+          <div class="activity-main">
+            <strong>${safe(item.transactionType)}</strong>
+            <span>${safe(item.productSummary || "Store transaction")}</span>
+            <small>${safe(item.transactionDate || "-")} ${item.paymentStatus ? " / " + safe(item.paymentStatus) : ""}</small>
+          </div>
+          <b>${money(item.amount)}</b>
+        </div>
+      `).join("") || "<p class='empty'>No recent transactions found.</p>";
     };
     document.getElementById("access-form").addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -216,6 +239,7 @@
         renderSnapshot(data);
         document.getElementById("access-gate").hidden = true;
         document.getElementById("report-shell").hidden = false;
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } catch (errorValue) {
         error.textContent = errorValue?.message?.includes("public data file")
           ? errorValue.message

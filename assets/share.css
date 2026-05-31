@@ -7,6 +7,9 @@
 * {
   box-sizing: border-box;
 }
+[hidden] {
+  display: none !important;
+}
 body {
   margin: 0;
   min-height: 100vh;
@@ -209,6 +212,11 @@ h2 {
   grid-template-columns: 1.15fr 0.85fr;
   gap: 18px;
 }
+.side-stack {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
 .panel {
   padding: 18px;
   min-width: 0;
@@ -289,6 +297,66 @@ h2 {
 .stock-row.low em {
   color: #92400e;
   background: #fef3c7;
+}
+.stock-list {
+  max-height: 440px;
+  overflow: auto;
+  padding-right: 4px;
+}
+.activity-list {
+  display: grid;
+  gap: 10px;
+  padding-top: 12px;
+}
+.activity-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f8fbff;
+}
+.activity-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  background: #dc2626;
+  font-weight: 900;
+}
+.activity-row.credit .activity-icon {
+  background: #059669;
+}
+.activity-row.credit b {
+  color: #047857;
+}
+.activity-row.debit b {
+  color: #b91c1c;
+}
+.activity-main {
+  min-width: 0;
+}
+.activity-main strong,
+.activity-main span,
+.activity-main small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.activity-main span,
+.activity-main small {
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.activity-row b {
+  color: #0f172a;
+  white-space: nowrap;
 }
 .share-note {
   display: flex;
